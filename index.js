@@ -61,6 +61,21 @@ const display = {
   question: function () {
     this.elementShown("question", quiz.getCurrentQuestion().text);
   },
+  choices: function () {
+    let choices = quiz.getCurrentQuestion().choices;
+
+    guessHandler = (id, guess) => {
+      document.getElementById(id).onclick = function () {
+        quiz.guess(guess);
+        quizApp();
+      };
+    };
+    // Affichage des choix + la prise en compte des choix
+    for (let i = 0; i < choices.length; i++) {
+      this.elementShown("choice" + i, choices[i]);
+      guessHandler("guess" + i, choices[i]);
+    }
+  },
 };
 // Game logic
 quizApp = () => {
@@ -68,6 +83,7 @@ quizApp = () => {
     //Ecran de fin
   } else {
     display.question();
+    display.choices();
   }
 };
 
