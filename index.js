@@ -4,7 +4,7 @@ class Question {
     this.choices = choices;
     this.answer = answer;
   }
-  isCorrect(choice) {
+  isCorrectAnswer(choice) {
     return choice === this.answer;
   }
 }
@@ -47,11 +47,10 @@ class Quiz {
     }
     this.currentQuestionIndex++;
   }
-  hasEndeed() {
+  hasEnded() {
     return this.currentQuestionIndex >= this.questions.length;
   }
 }
-
 // Quiz display
 const display = {
   elementShown: function (id, text) {
@@ -70,20 +69,35 @@ const display = {
         quizApp();
       };
     };
-    // Affichage des choix + la prise en compte des choix
+    // Affichage choix + prise en compte du choix
     for (let i = 0; i < choices.length; i++) {
       this.elementShown("choice" + i, choices[i]);
       guessHandler("guess" + i, choices[i]);
     }
   },
+  progress: function () {
+    this.elementShown(
+      "progress",
+      `Question ${quiz.currentQuestionIndex + 1} sur ${quiz.questions.length}`
+    );
+  },
+  endQuiz: function () {
+    let endQuizHTML = `
+      <h1>Quiz terminé !</h1>
+      <h3>Votre score est de : ${quiz.score} / ${quiz.questions.length}</h3>
+    `;
+    this.elementShown("quiz", endQuizHTML);
+  },
 };
-// Game logic
+
+// Game Logic
 quizApp = () => {
-  if (quiz.hasEndeed()) {
-    //Ecran de fin
+  if (quiz.hasEnded()) {
+    display.endQuiz();
   } else {
     display.question();
     display.choices();
+    display.progress();
   }
 };
 
